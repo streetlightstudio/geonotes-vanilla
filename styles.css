@@ -1,0 +1,490 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  /* Color Palette - Sophisticated Indigo/Violet */
+  --primary: #63f17d;
+  --primary-glow: rgba(106, 241, 99, 0.4);
+  --secondary: #85f65c;
+  --accent: #10b981;
+  
+  /* Glassmorphism Surface Colors */
+  --bg-color: #0f172a;
+  --glass-bg: rgba(30, 41, 59, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --card-bg: rgba(30, 41, 59, 0.5);
+  
+  /* Text Colors */
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+  
+  /* Shadows & Effects */
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  --glass-blur: blur(12px);
+  
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  --radius-xl: 1.5rem;
+  --radius-lg: 1rem;
+  --radius-md: 0.75rem;
+}
+
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-color);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: var(--text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography Extensions */
+h1, h2, h3 {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Header */
+header {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 0 2rem;
+}
+
+#title {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #a7f881 0%, #96fc84 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(167, 248, 129, 0.3));
+}
+
+/* Description Section */
+#description {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  padding: 1.5rem 2rem;
+  margin: 1.5rem auto 0;
+  max-width: 1200px;
+  width: calc(100% - 4rem);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  display: none; /* Hide by default to keep clean, or keep it if important */
+}
+
+/* Re-enabling description with a better look */
+#description {
+  display: block;
+  opacity: 0.8;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+/* Main Layout */
+#main {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  flex: 1;
+  align-items: stretch;
+}
+
+/* Left Panel: Landmark List */
+#landmarkListSection {
+  flex: 0 0 380px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  max-height: calc(100vh - 160px);
+}
+
+#landmarkListSection h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+#landmarkListSection h2::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 1.5rem;
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+/* Search Input */
+#filterInput {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  transition: var(--transition-fast);
+}
+
+#filterInput:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+/* List Styling */
+#landmarkList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+#landmarkList li {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#landmarkList li:hover {
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+#landmarkList li.active {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: var(--primary);
+}
+
+#landmarkList li.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--primary);
+}
+
+#landmarkList li span {
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+#landmarkList li button {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: var(--transition-fast);
+}
+
+#landmarkList li button:hover {
+  background: #ef4444;
+  color: white;
+}
+
+/* Right Panel: Map & Form */
+#main > section:last-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+#map {
+  height: 500px;
+  width: 100%;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lg);
+  z-index: 10;
+}
+
+/* Form Styling */
+#landmarkForm {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  box-shadow: var(--shadow-lg);
+  align-items: center;
+}
+
+#landmarkForm input[type="text"] {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  width: 100%;
+  transition: var(--transition-fast);
+}
+
+#landmarkForm input[type="text"]:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+/* File Input Styling */
+.file-upload-wrapper {
+  grid-column: span 2;
+}
+
+#imageUpload {
+  display: none;
+}
+
+.file-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed var(--glass-border);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  font-size: 0.95rem;
+}
+
+.file-label:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--primary);
+  color: var(--text-main);
+}
+
+.file-label i {
+  width: 18px;
+  height: 18px;
+}
+
+/* Save Button */
+#saveLandmark {
+  grid-column: span 2;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+#saveLandmark:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+  filter: brightness(1.1);
+}
+
+#saveLandmark:active {
+  transform: translateY(0);
+}
+
+/* Leaflet Popup Styling Overrides */
+.leaflet-popup-content-wrapper {
+  background: var(--bg-color) !important;
+  color: var(--text-main) !important;
+  border-radius: var(--radius-lg) !important;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+}
+
+.leaflet-popup-tip {
+  background: var(--bg-color) !important;
+}
+
+.leaflet-popup-content h2 {
+  color: var(--primary) !important;
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.leaflet-popup-content p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.leaflet-popup-content img {
+  border-radius: var(--radius-md);
+  margin-top: 0.5rem;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Entrance Animations */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#landmarkListSection, #map, #landmarkForm {
+  animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+#landmarkListSection { animation-delay: 0.1s; }
+#map { animation-delay: 0.2s; }
+#landmarkForm { animation-delay: 0.3s; }
+
+/* Responsive Adjustments */
+@media (max-width: 1100px) {
+  #main {
+    flex-direction: column;
+  }
+  
+  #landmarkListSection {
+    flex: none;
+    width: 100%;
+    max-height: 400px;
+  }
+  
+  #landmarkForm {
+    grid-template-columns: 1fr;
+  }
+  
+  #imageUpload, #saveLandmark {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  #main {
+    padding: 1rem;
+  }
+  
+  header {
+    height: 70px;
+  }
+  
+  #title {
+    font-size: 1.5rem;
+  }
+  
+  #description {
+    width: calc(100% - 2rem);
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Loader Spinner */
+.loader {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Custom Popup Style */
+.custom-popup h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.custom-popup p {
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.custom-popup img {
+  width: 100%;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  max-height: 15rem;
+}
