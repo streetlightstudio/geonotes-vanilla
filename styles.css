@@ -287,7 +287,8 @@ header {
   align-items: center;
 }
 
-#landmarkForm input[type="text"] {
+#landmarkForm input[type="text"],
+#landmarkForm input[type="number"] {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--glass-border);
   padding: 1rem 1.25rem;
@@ -298,11 +299,19 @@ header {
   transition: var(--transition-fast);
 }
 
-#landmarkForm input[type="text"]:focus {
+#landmarkForm input[type="text"]:focus,
+#landmarkForm input[type="number"]:focus {
   outline: none;
   background: rgba(255, 255, 255, 0.08);
   border-color: var(--primary);
   box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+/* Manual Coordinates Layout */
+.manual-coords {
+  grid-column: span 2;
+  display: flex;
+  gap: 1.5rem;
 }
 
 /* File Input Styling */
@@ -432,7 +441,7 @@ header {
     grid-template-columns: 1fr;
   }
   
-  #imageUpload, #saveLandmark {
+  #imageUpload, #saveLandmark, .manual-coords {
     grid-column: auto;
   }
 }

@@ -54,6 +54,118 @@ filterInput.addEventListener("input", function () {
 });
 
 // Add Marker Event
+// Save Landmark Function (Reusable)
+function saveLandmark(lat, lng, file) {
+    const title = titleInput.value;
+    const description = descriptionInput.value;
+    const originalContent = '<i data-lucide="plus-circle"></i> Save Landmark';
+
+    if (!title || !description) {
+        alert("Please enter a title and description");
+        addMarker.innerHTML = originalContent;
+        addMarker.disabled = false;
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function () {
+        const imageDataUrl = reader.result;
+
+        // Create marker
+        const marker = L.marker([lat, lng]).addTo(map);
+
+        // Popup content
+        const popupContent = `
+            <div class="custom-popup">
+                <h2>${title}</h2>
+                <p>${description}</p>
+                <img src="${imageDataUrl}" alt="${title}">
+            </div>
+        `;
+
+        marker.bindPopup(popupContent);
+        marker.openPopup();
+
+        // Create list item
+        const li = document.createElement("li");
+
+        const titleSpan = document.createElement("span");
+        titleSpan.textContent = title;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.innerHTML = '<i data-lucide="trash-2"></i>';
+        deleteButton.title = "Delete Landmark";
+
+        li.appendChild(titleSpan);
+        li.appendChild(deleteButton);
+        landmarkList.appendChild(li);
+        lucide.createIcons();
+
+        // Marker click → open popup + highlight
+        marker.on("click", function () {
+            this.openPopup();
+            highlightItem(li);
+        });
+
+        // List click → fly + open popup
+        li.addEventListener("click", function (e) {
+            if (e.target.closest('button')) return; // Don't trigger if delete button clicked
+            map.flyTo([lat, lng], 15);
+            marker.openPopup();
+            highlightItem(li);
+        });
+
+        function highlightItem(item) {
+            document.querySelectorAll("#landmarkList li").forEach(i => i.classList.remove("active"));
+            item.classList.add("active");
+            item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Landmark object
+        const landmark = {
+            title,
+            description,
+            lat,
+            lng,
+            image: imageDataUrl,
+            marker,
+            listItem: li
+        };
+
+        landmarks.push(landmark);
+
+        // Delete landmark
+        deleteButton.addEventListener("click", function (e) {
+            e.stopPropagation();
+            if (confirm(`Are you sure you want to delete "${title}"?`)) {
+                li.remove();
+                map.removeLayer(marker);
+                const index = landmarks.indexOf(landmark);
+                if (index > -1) landmarks.splice(index, 1);
+            }
+        });
+
+        // Reset UI
+        titleInput.value = "";
+        descriptionInput.value = "";
+        imageInput.value = "";
+        document.getElementById("manualLat").value = "";
+        document.getElementById("manualLng").value = "";
+        fileLabel.innerHTML = '<i data-lucide="image"></i> Add Photo';
+        lucide.createIcons();
+        
+        addMarker.innerHTML = originalContent;
+        addMarker.disabled = false;
+
+        // Optional: zoom to new marker
+        map.flyTo([lat, lng], 15);
+    };
+
+    reader.readAsDataURL(file);
+}
+
+// Add Marker Event
 addMarker.addEventListener("click", function () {
     const file = imageInput.files[0];
 
@@ -62,127 +174,47 @@ addMarker.addEventListener("click", function () {
         return;
     }
 
-    if (!navigator.geolocation) {
-        alert("Geolocation is not supported by your browser");
-        return;
-    }
-
-    // Change button state
-    const originalContent = addMarker.innerHTML;
-    addMarker.innerHTML = '<i class="loader"></i> Adding...';
-    addMarker.disabled = true;
-
-    navigator.geolocation.getCurrentPosition(function (position) {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-
-        const title = titleInput.value;
-        const description = descriptionInput.value;
-
-        if (!title || !description) {
-            alert("Please enter a title and description");
-            addMarker.innerHTML = originalContent;
-            addMarker.disabled = false;
+    const manualLat = parseFloat(document.getElementById("manualLat").value);
+    const manualLng = parseFloat(document.getElementById("manualLng").value);
+    
+    // Check if manual inputs are provided (allow 0 as valid)
+    if (!isNaN(manualLat) && !isNaN(manualLng)) {
+        // Validation
+        if (manualLat < -90 || manualLat > 90 || manualLng < -180 || manualLng > 180) {
+            alert("Invalid coordinates. Latitude must be between -90 and 90, Longitude between -180 and 180.");
             return;
         }
 
-        const reader = new FileReader();
+        // Set button to loading state temporarily (although instant)
+        const originalContent = addMarker.innerHTML;
+        addMarker.innerHTML = '<i class="loader"></i> Adding...';
+        addMarker.disabled = true;
 
-        reader.onload = function () {
-            const imageDataUrl = reader.result;
+        // Use manual coordinates
+        saveLandmark(manualLat, manualLng, file);
 
-            // Create marker
-            const marker = L.marker([lat, lng]).addTo(map);
-
-            // Popup content
-            const popupContent = `
-                <div class="custom-popup">
-                    <h2>${title}</h2>
-                    <p>${description}</p>
-                    <img src="${imageDataUrl}" alt="${title}">
-                </div>
-            `;
-
-            marker.bindPopup(popupContent);
-            marker.openPopup();
-
-            // Create list item
-            const li = document.createElement("li");
-
-            const titleSpan = document.createElement("span");
-            titleSpan.textContent = title;
-
-            const deleteButton = document.createElement("button");
-            deleteButton.innerHTML = '<i data-lucide="trash-2"></i>';
-            deleteButton.title = "Delete Landmark";
-
-            li.appendChild(titleSpan);
-            li.appendChild(deleteButton);
-            landmarkList.appendChild(li);
-            lucide.createIcons();
-
-            // Marker click → open popup + highlight
-            marker.on("click", function () {
-                this.openPopup();
-                highlightItem(li);
-            });
-
-            // List click → fly + open popup
-            li.addEventListener("click", function (e) {
-                if (e.target.closest('button')) return; // Don't trigger if delete button clicked
-                map.flyTo([lat, lng], 15);
-                marker.openPopup();
-                highlightItem(li);
-            });
-
-            function highlightItem(item) {
-                document.querySelectorAll("#landmarkList li").forEach(i => i.classList.remove("active"));
-                item.classList.add("active");
-                item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-
-            // Landmark object
-            const landmark = {
-                title,
-                description,
-                lat,
-                lng,
-                image: imageDataUrl,
-                marker,
-                listItem: li
-            };
-
-            landmarks.push(landmark);
-
-            // Delete landmark
-            deleteButton.addEventListener("click", function (e) {
-                e.stopPropagation();
-                if (confirm(`Are you sure you want to delete "${title}"?`)) {
-                    li.remove();
-                    map.removeLayer(marker);
-                    const index = landmarks.indexOf(landmark);
-                    if (index > -1) landmarks.splice(index, 1);
-                }
-            });
-
-            // Reset UI
-            titleInput.value = "";
-            descriptionInput.value = "";
-            imageInput.value = "";
-            fileLabel.innerHTML = '<i data-lucide="image"></i> Add Photo';
-            lucide.createIcons();
+    } else {
+        // Fallback to Geolocation
+        if (!navigator.geolocation) {
+            alert("Geolocation is not supported by your browser");
+            return;
+        }
+    
+        // Change button state
+        const originalContent = addMarker.innerHTML;
+        addMarker.innerHTML = '<i class="loader"></i> Finding Location...';
+        addMarker.disabled = true;
+    
+        navigator.geolocation.getCurrentPosition(function (position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
             
+            saveLandmark(lat, lng, file);
+    
+        }, function(error) {
+            alert("Error getting location: " + error.message);
             addMarker.innerHTML = originalContent;
             addMarker.disabled = false;
-
-            // Optional: zoom to new marker
-            map.flyTo([lat, lng], 15);
-        };
-
-        reader.readAsDataURL(file);
-    }, function(error) {
-        alert("Error getting location: " + error.message);
-        addMarker.innerHTML = originalContent;
-        addMarker.disabled = false;
-    });
+        });
+    }
 });
