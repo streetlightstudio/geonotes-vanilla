@@ -36,18 +36,27 @@
             <div id="map"></div>
             
             <div id="landmarkForm">
-                <input type="text" id="landmarkName" placeholder="Name this landmark">
-                <input type="text" id="landmarkDescription" placeholder="What's special about it?">
-                <div class="file-upload-wrapper">
-                    <label for="imageUpload" class="file-label">
-                        <i data-lucide="image"></i> Add Photo
-                    </label>
-                    <input type="file" id="imageUpload" accept="image/*">
-                </div>
-                <button id="saveLandmark">
-                    <i data-lucide="plus-circle"></i> Save Landmark
-                </button>
-            </div>
+    <input type="text" id="landmarkName" placeholder="Name this landmark">
+    <input type="text" id="landmarkDescription" placeholder="What's special about it?">
+    
+    <!-- NEW: Manual Coordinates Entry -->
+    <div class="manual-coords">
+        <input type="number" id="manualLat" placeholder="Latitude (optional)" step="any">
+        <input type="number" id="manualLng" placeholder="Longitude (optional)" step="any">
+    </div>
+    
+    <div class="file-upload-wrapper">
+        <label for="imageUpload" class="file-label">
+            <i data-lucide="image"></i> Add Photo
+        </label>
+        <input type="file" id="imageUpload" accept="image/*">
+    </div>
+
+    <button id="saveLandmark">
+        <i data-lucide="plus-circle"></i> Save Landmark
+    </button>
+</div>
+
         </section>
     </main>
 
